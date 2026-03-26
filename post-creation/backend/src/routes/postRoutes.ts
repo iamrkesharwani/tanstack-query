@@ -40,9 +40,9 @@ router.get('/', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   try {
     const { title, body, author } = req.body;
-    if (!title || !body) {
+    if (!title || !body || !author) {
       return res.status(400).json({
-        message: 'Validation failed: Title and body are required.',
+        message: 'Validation failed: Title, body, author are required.',
       });
     }
 
