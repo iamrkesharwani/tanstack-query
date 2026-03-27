@@ -12,3 +12,11 @@ export interface PaginatedPosts {
   totalPages: number;
   currentPage: number;
 }
+
+export interface Comment {
+  _id: string;
+  postId: string;
+  body: string;
+  author: string;
+  createdAt: string;
+}

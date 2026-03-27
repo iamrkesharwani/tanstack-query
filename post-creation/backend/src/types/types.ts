@@ -14,3 +14,11 @@ export interface PaginatedPosts {
   totalPages: number;
   currentPage: number;
 }
+
+export interface Comment {
+  _id?: ObjectId;
+  postId: ObjectId;
+  body: string;
+  author: string;
+  createdAt: Date;
+}

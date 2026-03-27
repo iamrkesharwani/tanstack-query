@@ -3,6 +3,7 @@ import 'dotenv/config';
 import cors from 'cors';
 import { connectDB } from './config/db.js';
 import postRoutes from './routes/postRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,7 @@ const startServer = async () => {
     });
 
     app.use('/api/posts', postRoutes);
+    app.use('/api/comments', commentRoutes);
 
     app.listen(PORT, () => {
       console.log(`Server is flying on http://localhost:${PORT}`);

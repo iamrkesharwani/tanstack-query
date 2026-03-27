@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { usePosts } from '../hooks/usePosts.js';
+import CommentSection from './CommentSection.js';
 
 const PostList = () => {
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, isPlaceholderData } = usePosts(page);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   if (isLoading)
     return (
@@ -25,31 +27,45 @@ const PostList = () => {
       className="flex flex-col flex-1 overflow-hidden"
       style={{ opacity: isPlaceholderData ? 0.5 : 1 }}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
-        {data?.posts.map((post) => (
-          <div
-            key={post._id}
-            className="group flex flex-col bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-200"
-          >
-            <div className="w-8 h-1 bg-green-500 rounded-full mb-3 group-hover:w-12 transition-all duration-300" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 overflow-hidden">
+        {data?.posts.map((post) => {
+          const isOpen = activeId === post._id;
+          return (
+            <div
+              key={post._id}
+              className="group flex flex-col bg-white border border-green-100 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-green-300 transition-all duration-200 overflow-hidden"
+            >
+              <div className="w-8 h-1 bg-green-500 rounded-full mb-3 group-hover:w-12 transition-all duration-300" />
 
-            <h3 className="text-sm font-bold text-gray-900 mb-1.5 leading-snug line-clamp-2">
-              {post.title}
-            </h3>
-            <p className="text-xs text-gray-500 leading-relaxed flex-1 line-clamp-3">
-              {post.body.substring(0, 100)}...
-            </p>
+              <h3 className="text-sm font-bold text-gray-900 mb-1.5 leading-snug line-clamp-2">
+                {post.title}
+              </h3>
+              <p className="text-xs text-gray-500 leading-relaxed line-clamp-3">
+                {post.body.substring(0, 100)}...
+              </p>
 
-            <div className="mt-3 pt-3 border-t border-green-50 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-xs uppercase">
-                {post.author?.[0] ?? 'A'}
+              <div className="mt-3 pt-3 border-t border-green-50 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-xs uppercase">
+                    {post.author?.[0] ?? 'A'}
+                  </div>
+                  <span className="text-xs text-gray-500 font-medium">
+                    {post.author}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => setActiveId(isOpen ? null : post._id)}
+                  className="text-xs font-semibold text-green-600 hover:text-green-800 transition-colors"
+                >
+                  {isOpen ? 'Hide ↑' : 'Comments ↓'}
+                </button>
               </div>
-              <span className="text-xs text-gray-500 font-medium">
-                {post.author}
-              </span>
+
+              {isOpen && <CommentSection postId={post._id} />}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Pagination */}
